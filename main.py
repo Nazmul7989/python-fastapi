@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from typing import Optional
 from pydantic import BaseModel
@@ -46,6 +47,11 @@ def update_user(user_id: int, user: User):
 def delete_user(user_id: int):
     #Write logic to delete user from database
     return {"data": f"Deleted user id: {user_id}"}
+
+
+# Custom host and port
+# if __name__ == "__main__":
+#     uvicorn.run(app, host= 'localhost', port=9000)
 
 
 
