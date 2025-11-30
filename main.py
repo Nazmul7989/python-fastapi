@@ -37,6 +37,17 @@ def create_user(user: User):
     #Write logic to create user in database
     return {"data": user}
 
+@app.put("/users/{user_id}")
+def update_user(user_id: int, user: User):
+    #Write logic to update user in database
+    return {"data": user}
+
+@app.delete("/users/{user_id}")
+def delete_user(user_id: int):
+    #Write logic to delete user from database
+    return {"data": f"Deleted user id: {user_id}"}
+
+
 
 
 
