@@ -1,28 +1,28 @@
-import uvicorn
-from fastapi import FastAPI, Query, status
+from fastapi import  Query, status, APIRouter
 from typing import Optional, Annotated
 from pydantic import BaseModel, Field
 
-app = FastAPI()
+router = APIRouter()
 
-@app.get("/")
+
+@router.get("/")
 def index():
     return {"data": "Hello World"}
 
-@app.get("/about")
+@router.get("/about")
 def about():
     return {"data": "About Page"}
 
-@app.get("/contact")
+@router.get("/contact")
 def contact():
     return {"data": "Contact Page"}
 
-@app.get("/users", status_code=status.HTTP_200_OK, tags=["Users"])
+@router.get("/users", status_code=status.HTTP_200_OK, tags=["Users"])
 def users(limit: int = 10, active: Optional[bool] = None):
     #Write logic to fetch users from database
     return {"data": f"Showing {limit} users", "active": active}
 
-@app.get("/users/{user_id}", status_code=status.HTTP_200_OK, tags=["Users"])
+@router.get("/users/{user_id}", status_code=status.HTTP_200_OK, tags=["Users"])
 def read_user(user_id: int):
     #Write logic to fetch user from database
     return {"data": user_id}
@@ -51,17 +51,17 @@ class User(BaseModel):
     }
 
 
-@app.post("/users", status_code=status.HTTP_201_CREATED, tags=["Users"])
+@router.post("/users", status_code=status.HTTP_201_CREATED, tags=["Users"])
 def create_user(user: User):
     #Write logic to create user in database
     return {"data": user}
 
-@app.put("/users/{user_id}", tags=["Users"])
+@router.put("/users/{user_id}", tags=["Users"])
 def update_user(user_id: int, user: User):
     #Write logic to update user in database
     return {"data": user}
 
-@app.delete("/users/{user_id}", tags=["Users"])
+@router.delete("/users/{user_id}", tags=["Users"])
 def delete_user(user_id: int):
     #Write logic to delete user from database
     return {"data": f"Deleted user id: {user_id}"}
@@ -69,7 +69,7 @@ def delete_user(user_id: int):
 
 # Custom host and port
 # if __name__ == "__main__":
-#     uvicorn.run(app, host= 'localhost', port=9000)
+#     uvicorn.run(router, host= 'localhost', port=9000)
 
 
 
