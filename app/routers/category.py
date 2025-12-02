@@ -1,19 +1,19 @@
 from typing import List
 from fastapi import Depends, status, HTTPException, APIRouter
 from .. database import get_db
-from .. import models, schemas
+from .. import models, schemas, oauth2
 from sqlalchemy.orm import Session
 
 router = APIRouter()
 
 
 @router.get("/categories", status_code=status.HTTP_200_OK, tags=["Categories"], response_model=List[schemas.CategoryResponse])
-def get_categories(db: Session = Depends(get_db)):
+def get_categories(db: Session = Depends(get_db), current_user: models.User = Depends(oauth2.get_current_user)):
     categories = db.query(models.Category).all()
     return categories
 
 @router.get("/categories/{id}", status_code=status.HTTP_200_OK, tags=["Categories"], response_model=schemas.CategoryResponse)
-def get_category(id: int, db: Session = Depends(get_db)):
+def get_category(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(oauth2.get_current_user)):
     category = db.query(models.Category).filter(models.Category.id == id).first()
 
     if not category:
@@ -22,7 +22,7 @@ def get_category(id: int, db: Session = Depends(get_db)):
     return category
 
 @router.post('/categories', status_code=status.HTTP_201_CREATED, tags=["Categories"], response_model=schemas.CategoryResponse)
-def create_category(category: schemas.CategoryRequest, db: Session = Depends(get_db)):
+def create_category(category: schemas.CategoryRequest, db: Session = Depends(get_db), current_user: models.User = Depends(oauth2.get_current_user)):
     new_category = models.Category(
         name = category.name,
         description = category.description
@@ -34,7 +34,7 @@ def create_category(category: schemas.CategoryRequest, db: Session = Depends(get
     return category
 
 @router.put('/categories/{id}', status_code=status.HTTP_200_OK, tags=["Categories"], response_model=schemas.CategoryResponse)
-def update_category(id: int, category: schemas.CategoryRequest, db: Session = Depends(get_db)):
+def update_category(id: int, category: schemas.CategoryRequest, db: Session = Depends(get_db), current_user: models.User = Depends(oauth2.get_current_user)):
     existing_category = db.query(models.Category).filter(models.Category.id == id).first()
 
     if not existing_category:
@@ -50,7 +50,7 @@ def update_category(id: int, category: schemas.CategoryRequest, db: Session = De
 
 #Delete category
 @router.delete('/categories/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=["Categories"])
-def delete_category(id: int, db: Session = Depends(get_db)):
+def delete_category(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(oauth2.get_current_user)):
     category = db.query(models.Category).filter(models.Category.id == id).first()
 
     if not category:

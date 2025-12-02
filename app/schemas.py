@@ -1,5 +1,6 @@
 from pydantic.v1 import BaseModel, EmailStr
 from datetime import datetime
+from typing import Optional
 
 
 class CategoryRequest(BaseModel):
@@ -48,5 +49,13 @@ class LoginRequest(BaseModel):
 class LoginResponse(BaseModel):
     access_token: str
     token_type: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
 
 
